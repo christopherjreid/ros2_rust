@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="2.0"?>
 <?xml-model
    href="http://download.ros.org/schema/package_format3.xsd"
    schematypens="http://www.w3.org/2001/XMLSchema"?>
@@ -9,13 +9,13 @@
   <maintainer email="christopherjreid@outlook.com">Chris Reid</maintainer>
   <license>Apache License 2.0</license>
 
-  <build_depend>test_msgs</build_depend>
-  <build_depend>rclrs</build_depend>
-  <build_depend>rosidl_runtime_rs</build_depend>
-
-  <exec_depend>test_msgs</exec_depend>
-  <exec_depend>rclrs</exec_depend>
-  <exec_depend>rosidl_runtime_rs</exec_depend>
+  <depend>test_msgs</depend>
+  <depend>diagnostic_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>stereo_msgs</depend>
+  <depend>rclrs</depend>
+  <depend>rosidl_runtime_rs</depend>
 
   <export>
     <build_type>ament_cargo</build_type>
