@@ -1,83 +1,97 @@
-#[cfg(test)]
-mod tests {
+use std::panic;
 
-    use rclrs::{Context, Node, QOS_PROFILE_SYSTEM_DEFAULT};
-    use std_msgs::msg;
+use rclrs::{Context, Node, RclrsError, QOS_PROFILE_SYSTEM_DEFAULT};
 
-    #[test]
-    fn test_publishers() {
-        let context = Context::new([]).unwrap();
-        let node_name = "test_publishers";
-        let node = Node::new(&context, node_name).unwrap();
+use test_msgs::msg;
 
-        let _publisher_string = node
-            .create_publisher::<msg::String>("test", QOS_PROFILE_SYSTEM_DEFAULT)
-            .expect("Failed to create String publisher");
+fn run_with_test_nodes<F>(test_fn: F) -> Result<(), RclrsError>
+where
+    F: FnOnce() -> Result<(), RclrsError> + panic::UnwindSafe,
+{
+    let result = panic::catch_unwind(|| test_fn());
 
-        let _publisher_bool = node
-            .create_publisher::<msg::Bool>("test", QOS_PROFILE_SYSTEM_DEFAULT)
-            .expect("Failed to create Bool publisher");
+    result.unwrap()
+}
 
-        let publisher_names_and_types = node
-            .get_publisher_names_and_types_by_node(&node.name(), "/")
-            .expect("Failed to get names and types of the publisher");
+#[test]
+fn test_publishers() {
+    let context = Context::new([]).unwrap();
+    let node_name = "test_publishers";
+    let node = Node::new(&context, node_name).unwrap();
 
-        let (name, types) = publisher_names_and_types.get_key_value("/test").unwrap();
+    let _publisher_basic_types = node
+        .create_publisher::<msg::BasicTypes>("test", QOS_PROFILE_SYSTEM_DEFAULT)
+        .expect("Failed to create String publisher");
 
-        assert_eq!(name, "/test");
-        assert_eq!(node.count_publishers("/test").unwrap(), 2);
-        assert!(types.contains(&"std_msgs/msg/String".to_string()));
-        assert!(types.contains(&"std_msgs/msg/Bool".to_string()));
+    let _publisher_empty = node
+        .create_publisher::<msg::Empty>("test", QOS_PROFILE_SYSTEM_DEFAULT)
+        .expect("Failed to create Bool publisher");
+
+    let publisher_names_and_types = node
+        .get_publisher_names_and_types_by_node(&node.name(), "/")
+        .expect("Failed to get names and types of the publisher");
+
+    let (name, types) = publisher_names_and_types.get_key_value("/test").unwrap();
+
+    if node.count_publishers("/test").unwrap() != 2 {
+        println!("{:?}", publisher_names_and_types);
     }
 
-    #[test]
-    fn test_subscriptions() {
-        let context = Context::new([]).unwrap();
-        let node_name = "test_subscriptions";
-        let mut node = Node::new(&context, node_name).unwrap();
+    assert_eq!(name, "/test");
+    assert_eq!(node.count_publishers("/test").unwrap(), 2);
+    assert!(types.contains(&"test_msgs/msg/BasicTypes".to_string()));
+    assert!(types.contains(&"test_msgs/msg/Empty".to_string()));
+}
 
-        let _subscription_string = node
-            .create_subscription::<msg::String, _>("test", QOS_PROFILE_SYSTEM_DEFAULT, |_msg| {})
-            .expect("Failed to create String subscription");
+#[test]
+fn test_subscriptions() {
+    let context = Context::new([]).unwrap();
+    let node_name = "test_subscriptions";
+    let mut node = Node::new(&context, node_name).unwrap();
 
-        let _subscription_bool = node
-            .create_subscription::<msg::Bool, _>("test", QOS_PROFILE_SYSTEM_DEFAULT, |_msg| {})
-            .expect("Failed to create Bool subscription");
+    let _subscription_basic_types = node.create_subscription::<msg::BasicTypes, _>(
+        "test",
+        QOS_PROFILE_SYSTEM_DEFAULT,
+        |_msg| {},
+    );
 
-        let subscription_names_and_types = node
-            .get_subscription_names_and_types_by_node(&node.name(), "/")
-            .expect("Failed to get names and types of the subscription");
+    let _subscription_empty = node
+        .create_subscription::<msg::Empty, _>("test", QOS_PROFILE_SYSTEM_DEFAULT, |_msg| {})
+        .expect("Failed to create Bool subscription");
 
-        let (name, types) = subscription_names_and_types.get_key_value("/test").unwrap();
+    let subscription_names_and_types = node
+        .get_subscription_names_and_types_by_node(&node.name(), "/")
+        .expect("Failed to get names and types of the subscription");
 
-        assert_eq!(name, "/test");
-        assert_eq!(node.count_subscriptions("/test").unwrap(), 2);
-        assert!(types.contains(&"std_msgs/msg/String".to_string()));
-        assert!(types.contains(&"std_msgs/msg/Bool".to_string()));
-    }
+    let (name, types) = subscription_names_and_types.get_key_value("/test").unwrap();
 
-    #[test]
-    fn test_topic_names_and_types() {
-        let context = Context::new([]).unwrap();
-        let node_name = "test_topic_names_and_types";
-        let mut node = Node::new(&context, node_name).unwrap();
+    assert_eq!(name, "/test");
+    assert_eq!(node.count_subscriptions("/test").unwrap(), 2);
+    assert!(types.contains(&"test_msgs/msg/BasicTypes".to_string()));
+    assert!(types.contains(&"test_msgs/msg/Empty".to_string()));
+}
 
-        let _publisher_string = node
-            .create_publisher::<msg::String>("test", QOS_PROFILE_SYSTEM_DEFAULT)
-            .expect("Failed to create String publisher");
+#[test]
+fn test_topic_names_and_types() {
+    let context = Context::new([]).unwrap();
+    let node_name = "test_topic_names_and_types";
+    let mut node = Node::new(&context, node_name).unwrap();
 
-        let _subscription_bool = node
-            .create_subscription::<msg::Bool, _>("test", QOS_PROFILE_SYSTEM_DEFAULT, |_msg| {})
-            .expect("Failed to create Bool subscription");
+    let _publisher_basic_types = node
+        .create_publisher::<msg::BasicTypes>("test", QOS_PROFILE_SYSTEM_DEFAULT)
+        .expect("Failed to create String publisher");
 
-        let topic_names_and_types = node
-            .get_topic_names_and_types()
-            .expect("Failed to get names and types of the subscription");
+    let _subscription_bool = node
+        .create_subscription::<msg::Empty, _>("test", QOS_PROFILE_SYSTEM_DEFAULT, |_msg| {})
+        .expect("Failed to create Bool subscription");
 
-        let (name, types) = topic_names_and_types.get_key_value("/test").unwrap();
+    let topic_names_and_types = node
+        .get_topic_names_and_types()
+        .expect("Failed to get names and types of the subscription");
 
-        assert_eq!(name, "/test");
-        assert!(types.contains(&"std_msgs/msg/String".to_string()));
-        assert!(types.contains(&"std_msgs/msg/Bool".to_string()));
-    }
+    let (name, types) = topic_names_and_types.get_key_value("/test").unwrap();
+
+    assert_eq!(name, "/test");
+    assert!(types.contains(&"test_msgs/msg/BasicTypes".to_string()));
+    assert!(types.contains(&"test_msgs/msg/Empty".to_string()));
 }

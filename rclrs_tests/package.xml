@@ -9,11 +9,11 @@
   <maintainer email="christopherjreid@outlook.com">Chris Reid</maintainer>
   <license>Apache License 2.0</license>
 
-  <build_depend>std_msgs</build_depend>
+  <build_depend>test_msgs</build_depend>
   <build_depend>rclrs</build_depend>
   <build_depend>rosidl_runtime_rs</build_depend>
 
-  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>test_msgs</exec_depend>
   <exec_depend>rclrs</exec_depend>
   <exec_depend>rosidl_runtime_rs</exec_depend>
 

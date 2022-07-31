@@ -15,6 +15,3 @@ version = "*"
 
 [dependencies.rosidl_runtime_rs]
 version = "*"
-
-[dependencies.std_msgs]
-version = "*"

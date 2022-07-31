@@ -1,4 +1,3 @@
-mod graph_tests;
+#![cfg(test)]
 
-#[cfg(test)]
-mod tests {}
+mod graph_tests;
