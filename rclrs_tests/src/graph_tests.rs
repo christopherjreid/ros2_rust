@@ -108,8 +108,18 @@ fn test_subscriptions() -> Result<(), RclrsError> {
         .unwrap();
     assert!(types.contains(&"test_msgs/msg/Defaults".to_string()));
 
-    assert_eq!(graph.node2.count_subscriptions(&(graph.node2.namespace() + "/graph_test_topic_1"))?, 1);
-    assert_eq!(graph.node2.count_subscriptions(&(graph.node2.namespace() + "/graph_test_topic_2"))?, 1);
+    assert_eq!(
+        graph
+            .node2
+            .count_subscriptions(&(graph.node2.namespace() + "/graph_test_topic_1"))?,
+        1
+    );
+    assert_eq!(
+        graph
+            .node2
+            .count_subscriptions(&(graph.node2.namespace() + "/graph_test_topic_2"))?,
+        1
+    );
 
     let node_2_subscription_names_and_types = graph
         .node2

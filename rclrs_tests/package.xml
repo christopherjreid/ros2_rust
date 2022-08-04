@@ -4,16 +4,18 @@
    schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rclrs_tests</name>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <description>Package containing tests for rclrs that make use of msgs and other dependencies</description>
   <maintainer email="christopherjreid@outlook.com">Chris Reid</maintainer>
   <license>Apache License 2.0</license>
 
   <depend>test_msgs</depend>
+  <!--
   <depend>diagnostic_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>stereo_msgs</depend>
+  -->
   <depend>rclrs</depend>
   <depend>rosidl_runtime_rs</depend>
 

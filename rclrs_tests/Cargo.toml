@@ -10,10 +10,10 @@ path = "src/lib.rs"
 [dependencies]
 anyhow = {version = "1", features = ["backtrace"]}
 test_msgs = {version = "*"}
-diagnostic_msgs = {version = "*"}
-nav_msgs = {version = "*"}
-sensor_msgs = {version = "*"}
-stereo_msgs = {version = "*"}
+#diagnostic_msgs = {version = "*"}
+#nav_msgs = {version = "*"}
+#sensor_msgs = {version = "*"}
+#stereo_msgs = {version = "*"}
 
 [dependencies.rclrs]
 version = "*"
